@@ -1,0 +1,35 @@
+<h1>Connect 4</h1>
+
+<p><%= button_to "New Game", games_path, method: :post %></p>
+
+<h3>Score</h3>
+<table border="1" cellpadding="6">
+  <tr>
+    <th>Red</th>
+    <th>Yellow</th>
+  </tr>
+  
+  <tr>
+    <td><%= @games.where(winner: "R").count %></td>
+    <td><%= @games.where(winner: "Y").count %></td>
+  </tr>
+  <tr><td colspan="4">Total games : <%= @games.count %></td></tr>
+  <tr><td colspan="4">
+    <form action="/clear" method="post" style="display:inline">
+      <%= csrf_meta_tags %>
+      <button type="submit">Clear History</button>
+    </form></td>
+</table>
+
+<h2>Recent Games</h2>
+<ul>
+  <% @games.each do |g| %>
+    <li>
+      <%= link_to "Game ##{g.id} (#{g.status}#{g.winner ? " - winner: #{get_winner(g.winner)}" : ""})", game_path(g) %> &mdash; next: <%= get_winner(g.current_player) %>
+    </li>
+  <% end %>
+</ul>
+
+
+
+

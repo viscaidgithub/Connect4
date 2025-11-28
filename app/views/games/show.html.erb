@@ -1,0 +1,50 @@
+<h1>Game ##<%= @game.id %></h1>
+<p>
+  Status: <%= @game.status %>
+  <% if @game.winner.present? %> — Winner: <%= @game.winner == "R" ? "Red (R)" : "Yellow (Y)" %> <% end %>
+</p>
+<p>Next: <%= @game.current_player == "R" ? "Red (R)" : "Yellow (Y)" %></p>
+
+<!-- Column drop buttons -->
+<table style="border-collapse: collapse;">
+  <tr>
+    <% (0...7).each do |col| %>
+      <th style="padding:6px;">
+        <% if @game.status == "playing" %>
+          <%= button_to "Drop", move_game_path(@game, col: col), method: :post %>
+        <% else %>
+          &nbsp;
+        <% end %>
+      </th>
+    <% end %>
+  </tr>
+
+  <% (0...6).each do |row| %>
+    <tr>
+      <% (0...7).each do |col| %>
+        <% piece = @game.cell(row, col) %>
+        <td style="border:1px solid #333; width:60px; height:60px; text-align:center; vertical-align:middle;">
+          <% if piece == "R" %>
+            <div style="width:40px;height:40px;border-radius:50%;background:red;margin:0 auto;"></div>
+          <% elsif piece == "Y" %>
+            <div style="width:40px;height:40px;border-radius:50%;background:gold;margin:0 auto;"></div>
+          <% else %>
+            <div style="width:40px;height:40px;border-radius:50%;background:#eee;margin:0 auto;"></div>
+          <% end %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<p>
+  <%= button_to "Reset Game", reset_game_path(@game), method: :post %>
+  <%= link_to "Back", root_path %>
+</p>
+
+<% if flash[:notice] %>
+  <p style="color:green;"><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:alert] %>
+  <p style="color:red;"><%= flash[:alert] %></p>
+<% end %>
